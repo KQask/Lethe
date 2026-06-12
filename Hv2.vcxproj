@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A4300C49-21A9-48FD-9F1F-84E7242E0031}</ProjectGuid>
+    <TemplateGuid>{BF2EEC58-14B3-44E2-887E-99FFA4EDBA60}</TemplateGuid>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <RootNamespace>Hv2</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <SignMode>Off</SignMode>
+  </PropertyGroup>
+  <!-- masm.props must live in ExtensionSettings, before Microsoft.Cpp.Default.props -->
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
+  </ImportGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Driver</ConfigurationType>
+    <DriverType>WDM</DriverType>
+    <PlatformToolset>WindowsKernelModeDriver10.0</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Driver</ConfigurationType>
+    <DriverType>WDM</DriverType>
+    <PlatformToolset>WindowsKernelModeDriver10.0</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)bin\obj\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)bin\obj\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PostBuildEvent>
+      <Command>
+      </Command>
+      <Message>Signing $(TargetName)$(TargetExt) with Hv2TestCert...</Message>
+    </PostBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <TreatWarningAsError>false</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <EntryPoint>DriverEntry</EntryPoint>
+      <EntryPointSymbol>CustomDriverEntry</EntryPointSymbol>
+    </Link>
+    <MASM>
+      <UseSafeExceptionHandlers>false</UseSafeExceptionHandlers>
+    </MASM>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PostBuildEvent>
+      <Command>
+      </Command>
+      <Message>Signing $(TargetName)$(TargetExt) with Hv2TestCert...</Message>
+    </PostBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <TreatWarningAsError>false</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <EntryPoint>DriverEntry</EntryPoint>
+      <EntryPointSymbol>CustomDriverEntry</EntryPointSymbol>
+    </Link>
+    <MASM>
+      <UseSafeExceptionHandlers>false</UseSafeExceptionHandlers>
+    </MASM>
+  </ItemDefinitionGroup>
+  <!-- Source -->
+  <ItemGroup>
+    <ClCompile Include="driver.cpp" />
+    <ClCompile Include="SVM\Npt.cpp" />
+    <ClCompile Include="SVM\Svm.cpp" />
+    <ClCompile Include="SVM\Vmcb.cpp" />
+    <ClCompile Include="SVM\Handlers\VmExitHandlers.cpp" />
+  </ItemGroup>
+  <!-- Headers -->
+  <ItemGroup>
+    <ClInclude Include="Globals.h" />
+    <ClInclude Include="SVM\Arch\Hypercalls.h" />
+    <ClInclude Include="SVM\Arch\Npt.h" />
+    <ClInclude Include="SVM\Npt.h" />
+    <ClInclude Include="util.h" />
+    <ClInclude Include="SVM\Svm.h" />
+    <ClInclude Include="SVM\Vmcb.h" />
+    <ClInclude Include="SVM\Arch\cr.h" />
+    <ClInclude Include="SVM\Arch\dr.h" />
+    <ClInclude Include="SVM\Arch\msr.h" />
+    <ClInclude Include="SVM\Arch\rflags.h" />
+    <ClInclude Include="SVM\Arch\ControlArea.h" />
+    <ClInclude Include="SVM\Arch\Guest.h" />
+    <ClInclude Include="SVM\Arch\Intrin.h" />
+    <ClInclude Include="SVM\Arch\VmExit.h" />
+    <ClInclude Include="SVM\Handlers\VmExitHandlers.h" />
+  </ItemGroup>
+  <!-- Assembly -->
+  <ItemGroup>
+    <MASM Include="SVM\Asm\Launch.asm" />
+    <MASM Include="SVM\Asm\Entrypoint.asm" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <!-- masm.targets must come after Microsoft.Cpp.targets -->
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
+  </ImportGroup>
+</Project>
